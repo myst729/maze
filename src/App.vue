@@ -1,29 +1,22 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { onMounted, ref } from 'vue'
+import { type Cell, SIZE, CELL, WALL, generateMaze, checkMaze } from './assets/maze.ts'
+import MazeMap from './components/MazeMap.vue'
+
+const states = ref<Cell[]>([])
+
+onMounted(() => {
+  let maze = generateMaze()
+  while (true) {
+    if (checkMaze(maze)) {
+      states.value = maze
+      return
+    }
+    maze = generateMaze()
+  }
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="128" height="128" />
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+  <MazeMap :size="SIZE" :cell="CELL" :wall="WALL" :states="states" />
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-.wrapper {
-  display: flex;
-  place-items: flex-start;
-  flex-wrap: wrap;
-}
-</style>
